@@ -1,5 +1,8 @@
 package com.matome.invoice.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,14 @@ public class LineItemService {
 	
 	public void addLineItem(LineItem lineItem) {
 		lineItemRepository.save(lineItem);
+		
+	}
+	
+	public List<LineItem> viewLineItems() {
+		List<LineItem> lineItems = new ArrayList<>();
+		lineItemRepository.findAll()
+		    .forEach(lineItems::add);
+		return lineItems;
 		
 	}
 

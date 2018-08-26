@@ -1,6 +1,7 @@
 package com.matome.invoice.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,8 +53,8 @@ public class LineItem implements Serializable {
 		this.unitPrice = unitPrice;
 	}
 	
-	public double getItemTotal() {
-		return unitPrice * quantity;
+	public BigDecimal getItemTotal() {
+		return new BigDecimal(unitPrice * quantity).setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 	
 }

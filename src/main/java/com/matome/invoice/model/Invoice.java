@@ -1,5 +1,7 @@
 package com.matome.invoice.model;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +14,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Invoice {
-	//private static final long serialVersionUID = 1L;
+public class Invoice implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,20 +69,26 @@ public class Invoice {
 		this.lineItems = lineItems;
 	}
 
-	public double getSubtotal() {
+	public BigDecimal getSubtotal() {
 		double subTotal = 0.0;
 		for (LineItem item: lineItems) {
-			subTotal += item.getItemTotal();
+			subTotal += Double.parseDouble(item.getItemTotal().toString());
 		}
-		return subTotal;
+		return convertToDecimal(subTotal);
 	}
 	
-	public double getVat() {
-		return vatRate * getSubtotal();
+	public BigDecimal getVat() {
+		double vat = vatRate * Double.parseDouble(getSubtotal().toString());
+		return convertToDecimal(vat);
 	}
 	
-	public double getTotal() {
-		return getSubtotal() + getVat();
+	public BigDecimal getTotal() {
+		double total = Double.parseDouble(getSubtotal().toString()) + Double.parseDouble(getVat().toString());
+		return convertToDecimal(total);
+	}
+	
+	private BigDecimal convertToDecimal(double num) {
+		return new BigDecimal(num).setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 }
